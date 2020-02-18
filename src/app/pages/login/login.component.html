@@ -1,0 +1,33 @@
+<div class="sidenav">
+    <div class="login-main-text">
+       <h2>Accordia Chat<br> Agent Login Page</h2>
+       <p>Login from here to access.</p>
+    </div>
+ </div>
+ <div class="main">
+    <div class="col-md-6 col-sm-12">
+       <div class="login-form">
+          <form action="#" (ngSubmit)="login(loginForm.value)" #loginForm="ngForm">
+            <div *ngIf="invalidLogin" class="alert alert-danger">Invalid username and/or password.</div>
+             <div class="form-group">
+                <label>User Name</label>
+                <input type="text" class="form-control" placeholder="User Name" name="username" required  #username="ngModel" ngModel >
+                <div *ngIf="!username.valid && username.touched"
+                    class="alert alert-danger">
+                    Username is required
+                </div>
+             </div>
+             <div class="form-group">
+                <label>Password</label>
+                <input type="password" class="form-control" placeholder="Password" name="password" required  #password="ngModel" ngModel>
+                <div 
+                    class="alert alert-danger"
+                    *ngIf="!password.valid && password.touched">
+                    Password is required
+                </div>
+             </div>
+             <button type="submit" class="btn btn-primary" [disabled]="!loginForm.form.valid" >Login</button>
+          </form>
+       </div>
+    </div>
+ </div>
