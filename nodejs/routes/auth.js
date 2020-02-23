@@ -16,14 +16,15 @@ router.post('/', async (req, res) => {
   //if (!validPassword) return res.status(400).send('Invalid email or password.');
 
  // const token = user.generateAuthToken();
- const token = jwt.sign({ role_id: '2', username: req.body.username }, config.get('jwtPrivateKey'));
+  const token = await jwt.sign({ role_id: '2', username: req.body.username }, config.get('jwtPrivateKey'));
+  //const decoded = jwt.verify(token, config.get('jwtPrivateKey'));
   res.send(token);
 });
 
 function validate(req) {
   const schema = {
-    username: Joi.string().min(5).max(255).required(),
-    password: Joi.string().min(5).max(255).required()
+    username: Joi.string().required(),
+    password: Joi.string().required()
   };
 
   return Joi.validate(req, schema);

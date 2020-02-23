@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Login }    from './login';
 import { Router } from '@angular/router';
 import { LoginService } from './login.service';
+import { JwtHelperService } from "@auth0/angular-jwt";
 
 @Component({
   selector: 'app-login',
@@ -10,8 +11,11 @@ import { LoginService } from './login.service';
 })
 export class LoginComponent implements OnInit {
   invalidLogin: boolean; 
+  login_data: any; 
+  token: any;
+  jwt: any;
 
-  constructor(private router:Router,private loginservice:LoginService) { }
+  constructor(private router:Router,private loginservice:LoginService) {  }
 
   ngOnInit(): void {
   }
@@ -19,13 +23,15 @@ export class LoginComponent implements OnInit {
   login(credentials){
 
     this.loginservice.login(credentials)  
-      .subscribe(result => { 
-        if (result)
-          this.router.navigate(['/']);
-        else  
-          this.invalidLogin = true; 
-      });
+    .subscribe(results => {
 
+      if (results){
+        localStorage.setItem('token', results);
+        this.router.navigate(['/chat']);
+      }else{
+        this.invalidLogin = true; 
+      }  
+    });
     /*let username = credentials_data.username;
     let password = credentials_data.password;
 
@@ -38,7 +44,6 @@ export class LoginComponent implements OnInit {
       this.invalidLogin = true; 
     }
     */
-   
   }
 
 }

@@ -9,9 +9,10 @@ import { ChatComponent } from './pages/chat/chat.component';
 import { LoginComponent } from './pages/login/login.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { HttpClientModule } from '@angular/common/http';
+import { HeaderComponent } from './pages/header/header.component';
 
 @NgModule({
-  declarations: [AppComponent, ChatComponent, LoginComponent],
+  declarations: [AppComponent, ChatComponent, LoginComponent, HeaderComponent],
   imports: [BrowserModule, FormsModule,AppRoutingModule, NgbModule, FontAwesomeModule,HttpClientModule],
   providers: [],
   bootstrap: [AppComponent]
