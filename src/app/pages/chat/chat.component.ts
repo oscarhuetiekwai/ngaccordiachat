@@ -18,6 +18,7 @@ export class ChatComponent implements OnInit,AfterViewChecked {
   messages: string[] = [];
   typings: string[] = [];
   rooms: string[] = [];
+  wholeaveroom: string[] = [];
   username:string;
   role_id:string;
   date:string;
@@ -48,6 +49,13 @@ export class ChatComponent implements OnInit,AfterViewChecked {
     .whoTyping()
     .subscribe((data) => {
       this.typings.push(data);
+    });
+
+    // get all chat rooms
+    this.chatService
+    .wholeaveroom()
+    .subscribe((data) => {
+      this.wholeaveroom.push(data);
     });
 
 
@@ -91,6 +99,19 @@ export class ChatComponent implements OnInit,AfterViewChecked {
 
     this.chatService.sendMessage(this.message,this.username,this.role_id,current_date_time,room);
     this.message = '';
+  }
+
+  endchat(){
+    const room = localStorage.getItem('currentjoinroom');
+    let token = localStorage.getItem('token');
+    if (token) {
+      let jwt = new JwtHelperService();
+      let token_data = jwt.decodeToken(token);
+      this.username = token_data.username; 
+      this.role_id = token_data.role_id; 
+    }
+
+    this.chatService.leavechat(this.username,room);
   }
 
 

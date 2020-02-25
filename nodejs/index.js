@@ -62,7 +62,7 @@ io.on('connection', (socket) => {
     });
 
      // agent transfer chat
-     socket.on('agentchangeroom', (data) => {
+     socket.on('transferchat', (data) => {
         socket.leave(data.previousroom);
         socket.join(data.newroom);
         //io.in(data.room).emit('chatmessage', data);
@@ -70,8 +70,8 @@ io.on('connection', (socket) => {
   
     // customer or agent leave the room   
     socket.on('leaveroom', (data) => {
-        console.log(data.username + 'left the room : ' + data.room);
-        socket.broadcast.to(data.room).emit('left room', {user:data.username, message:'has left this room.'});
+        console.log(data.username + ' left the room : ' + data.room);
+        io.in(data.room).emit('wholeaveroom', data);
         socket.leave(data.room);
     });
 

@@ -43,8 +43,11 @@
       <button id="button-addon2" type="button" class="btn btn-warning " >
         Convert Ticket
       </button>
-      <button id="button-addon2" type="button" class="btn btn-danger " >
+      <button id="button-addon2" type="button" class="btn btn-default " >
         Transfer Chat
+      </button>
+      <button id="button-addon2" type="button" class="btn btn-danger " (click)="endchat()" >
+        End Chat
       </button>
 
       <div class="px-4 py-5 chat-box bg-white" id="msgContainer" >
@@ -70,6 +73,14 @@
             </div>
           </div>
         </div>
+
+        <div *ngFor="let leave of wholeaveroom | slice:0:1; let i=index" class="media w-100 mb-3" id="wholeaveroom" #wholeaveroom>
+          <div class="media-body ml-3">
+            <div class="bg-light rounded py-2 px-3 mb-2">
+              <p ><em>{{leave.username}} left the room...</em></p>
+            </div>
+          </div>
+        </div>
        
       </div>
 
@@ -89,9 +100,9 @@
           />
         
           <div class="input-group-append">
-           <!-- <button id="button-addon2" type="button" class="btn btn-warning">
+            <button id="button-addon2" type="button" class="btn btn-warning">
               Upload
-            </button>-->
+            </button>
             
             <button id="button-addon2" type="submit" class="btn btn-primary" [disabled]="!chatForm.form.valid" >
               Send

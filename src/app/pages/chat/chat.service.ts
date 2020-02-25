@@ -13,17 +13,6 @@ export class ChatService {
     this.socket = io(this.url);
   }
 
-  // handle send message
-  public sendMessage(message,username,role_id,current_date_time,room) {
-    this.socket.emit('chatmessage', {
-      message: message,
-      username: username,
-      role_id: role_id,
-      current_date_time: current_date_time,
-      room: room
-    });
-  }
-
   // handle get message
   public getMessages = () => {
       return Observable.create((observer) => {
@@ -31,6 +20,24 @@ export class ChatService {
               observer.next(message,username,role_id,current_date_time,room);
           });
       });
+  }
+
+  // handle who typing
+  public whoTyping = () => {
+    return Observable.create((observer) => {
+        this.socket.on('typing', (username,role_id) => {
+            observer.next(username,role_id);
+        });
+    });
+  }
+
+  // handle who left the room
+  public wholeaveroom = () => {
+    return Observable.create((observer) => {
+        this.socket.on('wholeaveroom', (data) => {
+            observer.next(data);
+        });
+    });
   }
 
   // get all room
@@ -41,7 +48,7 @@ export class ChatService {
             
         });
     });
-}
+  }
 
   // handle typing message
   public typing(username,room) {
@@ -51,12 +58,11 @@ export class ChatService {
     });
   }
 
-  // handle who typing
-  public whoTyping = () => {
-    return Observable.create((observer) => {
-        this.socket.on('typing', (username,role_id) => {
-            observer.next(username,role_id);
-        });
+  // handle leave chat
+  public leavechat(username,room) {
+    this.socket.emit('leaveroom', {
+      username: username,
+      room: room
     });
   }
 
@@ -69,11 +75,21 @@ export class ChatService {
   }
 
    // handle change room
-   public changeroom(newroom,previousroom) {
-    this.socket.emit('agentchangeroom', {
+   public transferchat(newroom,previousroom) {
+    this.socket.emit('transferchat', {
       newroom: newroom,
       previousroom: previousroom
     });
   }
 
+  // handle send message
+  public sendMessage(message,username,role_id,current_date_time,room) {
+    this.socket.emit('chatmessage', {
+      message: message,
+      username: username,
+      role_id: role_id,
+      current_date_time: current_date_time,
+      room: room
+    });
+  }
 }
