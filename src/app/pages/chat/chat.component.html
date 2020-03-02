@@ -51,6 +51,21 @@
       </button>
 
       <div class="px-4 py-5 chat-box bg-white" id="msgContainer" >
+
+
+          <!-- History Messages -->
+          <div  *ngFor="let ch of chat" class="media w-50 mb-3" [ngClass]="ch.role_id == 2 ? 'ml-auto': ''" #scrollMe >
+            <div class="media-body ml-3">
+              <div [ngClass]="ch.role_id == 2 ? 'bg-primary': 'bg-light'" class="rounded py-2 px-3 mb-2">
+                <strong [ngClass]="ch.role_id == 2 ? 'text-white': ''">{{ch.chat_username}}</strong>
+                <p class="text-small mb-0 " [ngClass]="ch.role_id == 2 ? 'text-white': ''">
+                {{ch.chat_message}}
+                </p>
+              </div>
+              <p class="small text-muted">{{ch.chat_datecreated | date:'HH:mm | MMM d EEE'}}</p>
+            </div>
+          </div>
+
         
         <!-- Messages -->
         <div  *ngFor="let data of messages" class="media w-50 mb-3" [ngClass]="data.role_id == 2 ? 'ml-auto': ''" #scrollMe >

@@ -16,7 +16,11 @@ router.post('/', async (req, res) => {
   //if (!validPassword) return res.status(400).send('Invalid email or password.');
 
  // const token = user.generateAuthToken();
-  const token = await jwt.sign({ role_id: '2', username: req.body.username }, config.get('jwtPrivateKey'));
+
+  // temporary for user id 
+  const user_id = Math.floor(Math.random() * 1000);
+
+  const token = await jwt.sign({user_id: user_id, role_id: '2', username: req.body.username }, config.get('jwtPrivateKey'));
   //const decoded = jwt.verify(token, config.get('jwtPrivateKey'));
   res.send(token);
 });

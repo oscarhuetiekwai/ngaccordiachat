@@ -1,7 +1,9 @@
 import { Component, OnInit,AfterViewChecked, ViewChild, ElementRef } from "@angular/core";
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import { ChatService } from './chat.service';
+import { Chat } from './chat';
 import { JwtHelperService } from "@auth0/angular-jwt";
+
 
 @Component({
   selector: "app-chat",
@@ -13,6 +15,7 @@ export class ChatComponent implements OnInit,AfterViewChecked {
 
   faEnvelope = faEnvelope;
   message:string;
+  user_id:number;
   data:any;
   typing:string;
   messages: string[] = [];
@@ -26,6 +29,7 @@ export class ChatComponent implements OnInit,AfterViewChecked {
   container: HTMLElement;  
 
   currentjoinroom:any = ''; 
+  chat: Chat[]
 
 
   constructor(private chatService: ChatService) {}
@@ -38,8 +42,13 @@ export class ChatComponent implements OnInit,AfterViewChecked {
     this.chatService
     .getMessages()
     .subscribe((data) => {
-      this.messages.push(data);
 
+      // only display which room I am
+      const room = localStorage.getItem('currentjoinroom');
+      if(room == data.room){
+        this.messages.push(data);
+      }
+      
       // clear typing
       this.typings = [];
     });
@@ -67,7 +76,6 @@ export class ChatComponent implements OnInit,AfterViewChecked {
       this.rooms.push(data);
     });
 
-
   }
 
   // check for scrolling chat
@@ -85,6 +93,7 @@ export class ChatComponent implements OnInit,AfterViewChecked {
       let token_data = jwt.decodeToken(token);
       this.username = token_data.username; 
       this.role_id = token_data.role_id; 
+      this.user_id = token_data.user_id; 
     }
 
     const date = new Date;
@@ -97,7 +106,7 @@ export class ChatComponent implements OnInit,AfterViewChecked {
     let today_month = months[date.getMonth()];
     const current_date_time = date.getHours() + ":" + date.getMinutes() + " | " + today_month + " " + date.getDate() + " " + today_day;
 
-    this.chatService.sendMessage(this.message,this.username,this.role_id,current_date_time,room);
+    this.chatService.sendMessage(this.message,this.username,this.role_id,current_date_time,room,this.user_id);
     this.message = '';
   }
 
@@ -116,14 +125,29 @@ export class ChatComponent implements OnInit,AfterViewChecked {
 
 
   agentjoinroom(newroom){
-
+    // clear all the chat when switch different room
+    this.messages = [];
+    this.chat = [];
     this.currentjoinroom = localStorage.getItem('currentjoinroom');
 
-    this.chatService.joinroom(newroom);
+    let token = localStorage.getItem('token');
+    if (token) {
+      let jwt = new JwtHelperService();
+      let token_data = jwt.decodeToken(token);
+      this.user_id = token_data.user_id; 
+    }
+
+
+    this.chatService.joinroom(newroom,this.user_id);
     localStorage.setItem('currentjoinroom',newroom);
 
   
-
+    // get history chat from this room 
+    this.chatService.getroomhistorychat(newroom)
+    .subscribe( result => {
+ 
+      this.chat = result;
+    });
     // if agent not joining any room yet
    /* if(this.currentjoinroom == ''){
       this.chatService.joinroom(newroom);

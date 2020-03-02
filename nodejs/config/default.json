@@ -1,3 +1,10 @@
 {
-  "jwtPrivateKey": "supersecretman"
+  "jwtPrivateKey": "supersecretman",
+  "dbconfig": {
+    "host": "10.0.1.18",
+    "port": 3306,
+    "dbName": "chat",
+    "dbUsername": "callcenter",
+    "dbPassword": "ca11c3nt3r"
+  }
 }

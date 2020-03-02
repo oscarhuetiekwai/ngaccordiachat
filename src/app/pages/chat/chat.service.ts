@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import * as io from 'socket.io-client';
+import { Chat } from './chat';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -9,7 +11,7 @@ export class ChatService {
   private url = 'http://localhost:4000';
   private socket;
 
-  constructor() {
+  constructor(private http: HttpClient) {
     this.socket = io(this.url);
   }
 
@@ -68,9 +70,10 @@ export class ChatService {
 
 
   // handle join room
-  public joinroom(newroom) {
+  public joinroom(newroom,user_id) {
     this.socket.emit('agentjoinroom', {
-      newroom: newroom
+      newroom: newroom,
+      user_id: user_id
     });
   }
 
@@ -83,13 +86,20 @@ export class ChatService {
   }
 
   // handle send message
-  public sendMessage(message,username,role_id,current_date_time,room) {
+  public sendMessage(message,username,role_id,current_date_time,room,user_id) {
     this.socket.emit('chatmessage', {
       message: message,
       username: username,
       role_id: role_id,
       current_date_time: current_date_time,
-      room: room
+      room: room,
+      user_id: user_id
     });
   }
+
+  // get all history chat for same room
+  public getroomhistorychat(room: any): Observable<Chat[]> { 
+    return this.http.get<Chat[]>(this.url+'/api/chat/'+room);
+  }
+
 }
